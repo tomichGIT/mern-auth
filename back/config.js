@@ -11,4 +11,4 @@ dotenv.config();
 export const PORT = process.env.PORT || 5000;
 export const DOMAIN = process.env.DOMAIN || 'http://localhost';
 
-//export const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+//export const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_213';
