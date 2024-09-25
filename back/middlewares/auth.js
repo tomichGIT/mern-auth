@@ -26,3 +26,17 @@ export const checkPermission = (req, res, next) => {
     //     res.status(401).json({ message: 'Token is not valid' });
     // }
 }
+
+// Middleware para verificar el token JWT
+export const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.sendStatus(401);
+
+    //     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    //       if (err) return res.sendStatus(403);
+    //       req.user = user;
+    //       next();
+    //     });
+};

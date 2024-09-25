@@ -14,6 +14,7 @@ import Login from '@/pages/Login'
 import Registro from '@/pages/Registro'
 import Admin from '@/pages/Admin'
 
+import '@/scss/main.scss'
 
 function App() {
  
@@ -37,6 +38,10 @@ function App() {
             </PrivateRoute>
           } />
         </Routes>
+
+        {/* ejemplo uso de SASS  */}
+        <button className="primary-button">Principal</button>
+        <button className="secondary-button">Secundario</button>
 
       </main>
 
