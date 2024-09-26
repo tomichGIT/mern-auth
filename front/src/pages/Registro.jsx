@@ -14,15 +14,22 @@ const Registro = () => {
 
   // solo para habilitar el botón de submit
   const [canSubmit, setCanSubmit] = useState(false);
+  const [error, setError] = useState(null); // Mensajes de error del formulario
 
-  // Botón de Submit: si todo es true, setear canSubmit a true
-  useEffect(() => {
-    setCanSubmit(formData.name && formData.username && formData.password && formData.tyc);
-    //console.log(formData);
-  }, [formData]);
+  
+  const { register, user } = useUser();
 
 
-  const { register } = useUser();
+    // Botón de Submit: si todo es true, setear canSubmit a true
+    useEffect(() => {
+      setCanSubmit(formData.name && formData.username && formData.password && formData.tyc);
+      //console.log(formData);
+    }, [formData]);
+
+    // si entran a /registro y ya están logueados, los redirigimos al /home
+    useEffect(() => {
+      if (user) {  navigate('/');  }
+    }, [user]);
 
   // Navigate me permite ir a cualquier sección usando JS
   const navigate = useNavigate();
@@ -37,15 +44,21 @@ const Registro = () => {
 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(formData);
-    navigate('/admin');
+    // Dejamos que useUser se encarga del Login
+    const errorMessage = await register(formData);
+    if (errorMessage) {
+      setError(errorMessage); // mostramos mensaje de error si lo hay
+    } else {
+      setError(null); // quitamos el error si se ha solucionado
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h1>Registro</h1>
+      {error && <p className="text-red-500">{error}</p>} {/* Posibles errores de Registro */}
       <input onChange={handleChange} type="text" name="name" placeholder="Nombre" required />
       <input onChange={handleChange} type="email" name="username" placeholder="Email" required />
       <input onChange={handleChange} type="password" name="password" placeholder="Clave" required />

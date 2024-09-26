@@ -22,64 +22,84 @@ export function UserProvider({ children }) {
 
     const login = async (userData) => {
 
-      // Aquí enviaríamos los datos a nuestro backend
-      // y recibiríamos la respuesta antes de establecer el usuario
-      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-          //'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(userData)
-      });
-      const responseData = await response.json();
-      if (!response.ok) {
-        console.error('Error:', responseData.message);
-        return
+      try {
+
+        // Aquí enviaríamos los datos a nuestro backend
+        // y recibiríamos la respuesta antes de establecer el usuario
+        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          return responseData.message;
+        }
+
+        // extraemos el usuario de la respuesta
+        const usuario=responseData.data;
+
+        console.log(responseData);
+        setUser(usuario);
+        
+        // Guardamos el Usuario en LocalStorage
+        localStorage.setItem('user', JSON.stringify(usuario));
+        
+        // Guardamos el JWT token en LocalStorage
+        localStorage.setItem('token', responseData.token);
+
+        return null; // no hay error
+         
+      } catch (e) {
+        console.error('Error:', e);
+        return "Error en el servidor";
       }
 
-      //const responseData = userData;
-
-      console.log(responseData);
-      setUser(responseData);
-      localStorage.setItem('user', JSON.stringify(responseData));
-      //  // Store the token in localStorage
-      //  localStorage.setItem('token', data.token);
+      
     };
 
     const register = async (userData) => {
 
       try {
-        // Aquí enviaríamos los datos a nuestro backend
+        // Aquí enviamos los datos a nuestro backend
         // y recibiríamos la respuesta antes de establecer el usuario
 
-        // const response = await fetch(`${VITE_BACKEND_URL}/api/v1/register`, {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify(userData)
-        // });
-        // const responseData = await response.json();
-        // if (!response.ok) {
-        //   console.error('Error:', responseData.message);
-        //   return;
-        // }
+        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          return responseData.message;
+        }
 
-        const responseData = userData;
+        // extraemos el usuario de la respuesta
+        const usuario=responseData.data;
 
-        setUser(responseData);
-        localStorage.setItem('user', JSON.stringify(responseData));
+        setUser(usuario);
 
+        // Guardamos el Usuario en LocalStorage
+        localStorage.setItem('user', JSON.stringify(usuario));
+        
+        // Guardamos el JWT token en LocalStorage
+        localStorage.setItem('token', responseData.token);
+
+        return null; // no hay error
       } catch (e) {
         console.error('Error:', e);
-        return;
+        return "Error en el servidor";
       }
     };
 
     const logout = () => {
       setUser(null);
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
     };
 
     return (

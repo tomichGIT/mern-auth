@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/hooks/useUser';
 import { Button } from '@/components/Button';
@@ -6,13 +6,17 @@ import { Button } from '@/components/Button';
 const Login = () => {
   const [formData, setFormData] = useState({ 
     username: '', 
-    password: '',
-    // le agrego a mano name e image, pero estos vienen desde la DB en useUser 
-    name: "tomi",
-    image: 'https://picsum.photos/200' 
+    password: ''
   });
+  const [error, setError] = useState(null); // Mensajes de error del formulario
 
-  const { login } = useUser();
+  // uso de mi custom hook useUser
+  const { login, user } = useUser();
+
+  // si entran a /login y ya están logueados, los redirigimos a /admin
+  useEffect(() => {
+    if (user) {  navigate('/');  }
+  }, [user]);
 
   // Navigate me permite ir a cualquier sección usando JS
   const navigate = useNavigate();
@@ -27,16 +31,21 @@ const Login = () => {
 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // En una aplicación real, aquí verificaríamos las credenciales con el servidor
-    login(formData);
-    navigate('/admin');
+    // Dejamos que useUser se encarga del Login
+    const errorMessage = await login(formData);
+    if (errorMessage) {
+      setError(errorMessage); // mostramos mensaje de error si lo hay
+    } else {
+      setError(null); // quitamos el error si se ha solucionado
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h1>Login</h1>
+      {error && <p className="text-red-500">{error}</p>} {/* Posibles errores de Login */}
       <input onChange={handleChange} value={formData.username} type="email" name="username" placeholder="Email" required />
       <input onChange={handleChange} value={formData.password} type="password" name="password" placeholder="Password" required />
       <Button type="submit">Login</Button>

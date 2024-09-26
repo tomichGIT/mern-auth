@@ -33,11 +33,6 @@ const MockUser = {
 //                      Rutas
 // ----------------------------------------------
 
-// GET todos los usuarios
-app.get('/api/v1/users', async (req, res) => {
-    res.status(200).json(users);
-});
-
 
 // POST Login de Usuarios
 app.post('/api/v1/login', async (req, res) => {
@@ -97,21 +92,21 @@ app.post('/api/v1/register', async (req, res) => {
 
     // Uso de bcrypt para encriptar la contraseña
     try {
-        const { username, password, image = "https://picsum.photos/200/300.jpg" } = req.body;
+        const { username, password, name = "Sin nombre", image = "https://picsum.photos/200/300.jpg" } = req.body;
 
-        console.log(req.body);
+        debug.blue(req.body);
 
         // Hashear la contraseña con bcrypt
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Guardar el usuario en la "base de datos" users (array)
-        const id= Math.floor(Math.random() * 1000) + 1;
-        const newUser = { id, username, password: hashedPassword, image };
-        console.log("Hashed password: ", hashedPassword);
+        const id = Math.floor(Math.random() * 1000) + 1;
+        const newUser = { id, username, password: hashedPassword, name, image };
+        debug.blue("Hashed password: ", hashedPassword);
 
         users.push(newUser);
-        console.log('Users:', users);
+        debug.blue('Users:', users);
 
         // Creo JWT Token y le devuelvo el Token + Usuario (sin clave)
 
@@ -131,6 +126,10 @@ app.post('/api/v1/register', async (req, res) => {
 // GET contenido privado
 app.get('/api/v1/admin', authenticateToken, (req, res) => {
     res.status(200).json({ message: `Acceso concedido a ${req.user.username}` });
+});
+// GET todos los usuarios
+app.get('/api/v1/users', authenticateToken, async (req, res) => {
+    res.status(200).json({ data: users, message: 'Lista de usuarios' });
 });
 
 app.listen(PORT, () => {
