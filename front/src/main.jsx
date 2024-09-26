@@ -1,8 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
-//import './index.css'
-
 
 // Contexto de Usuario
 import { UserProvider } from '@/hooks/useUser'
@@ -21,7 +19,7 @@ createRoot(document.getElementById('root')).render(
       <Router>
         <App />
       </Router>
-      {/* <RouterProvider router={router} /> */}
+      {/* v1: <RouterProvider router={router} /> */}
     </UserProvider>
   </StrictMode>,
 )
