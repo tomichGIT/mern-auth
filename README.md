@@ -56,7 +56,7 @@ Día 2:
 - [ ] JWT con JsonWebToken para protección de rutas privadas
 - [ ] Testing
 
-
+ 
 ```bash
 bun init
 bun i express mongoose dotenv cors

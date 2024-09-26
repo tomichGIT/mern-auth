@@ -109,6 +109,8 @@ app.post('/api/v1/register', async (req, res) => {
         console.log('Users:', users);
 
 
+        // create a random number between 1 and 1000
+        const number= Math.floor(Math.random() * 1000) + 1;
         // Creo JWT Token y le devuelvo el Token + Usuario (sin clave)
 
         // Create and sign JWT
