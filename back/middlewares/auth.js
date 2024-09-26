@@ -1,6 +1,7 @@
 
-// import jwt from 'jsonwebtoken';
-// import { JWT_SECRET } from '../config.js';
+
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../config.js';
 
 import { debug } from '../tools/utils.js';
 
@@ -30,13 +31,15 @@ export const checkPermission = (req, res, next) => {
 // Middleware para verificar el token JWT
 export const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
+    console.log(authHeader);
+    // Bearer "mi-token-jwt-provenieniente-del-front"
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.sendStatus(401); // Unauthorized
 
-    //     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    //       if (err) return res.sendStatus(403);
-    //       req.user = user;
-    //       next();
-    //     });
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // Forbidden
+        req.user = user;
+        next();
+    });
 };

@@ -24,22 +24,23 @@ export function UserProvider({ children }) {
 
       // Aquí enviaríamos los datos a nuestro backend
       // y recibiríamos la respuesta antes de establecer el usuario
-      // const response = await fetch(`${VITE_BACKEND_URL}/api/v1/login`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //     //'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      //   },
-      //   body: JSON.stringify(userData)
-      // });
-      // const responseData = await response.json();
-      // if (!response.ok) {
-      //   console.error('Error:', responseData.message);
-      //   return
-      // }
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          //'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(userData)
+      });
+      const responseData = await response.json();
+      if (!response.ok) {
+        console.error('Error:', responseData.message);
+        return
+      }
 
-      const responseData = userData;
+      //const responseData = userData;
 
+      console.log(responseData);
       setUser(responseData);
       localStorage.setItem('user', JSON.stringify(responseData));
       //  // Store the token in localStorage

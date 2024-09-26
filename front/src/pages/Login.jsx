@@ -37,8 +37,8 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h1>Login</h1>
-      <input onChange={handleChange} type="email" name="username" placeholder="Email" required />
-      <input onChange={handleChange} type="password" name="password" placeholder="Password" required />
+      <input onChange={handleChange} value={formData.username} type="email" name="username" placeholder="Email" required />
+      <input onChange={handleChange} value={formData.password} type="password" name="password" placeholder="Password" required />
       <Button type="submit">Login</Button>
     </form>
   );
