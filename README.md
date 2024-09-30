@@ -29,6 +29,7 @@ Nuestro Front tendrá formulario de Registro, Login, Home Pública y Sección Pr
 - [x] Botón de Logout y Limpieza de Sesión
 - [x] Crear Variables de entorno para VITE_BACKEND_URL
 - [x] Crear los fetch para Login y Registro
+- [ ] Upload de Archivos
 
 ```bash
 bun create vite front
@@ -51,6 +52,7 @@ Nuestro Back tendrá una API Rest con rutas para Auth y Usuarios. También posee
 - [ ] Esquemas de Mongoose para usuarios (nombre, email, contraseña)
 - [ ] Conexión a MongoDB Atlas
 - [ ] Testing
+- [ ] Upload de Archivos (Multer)
 
 
 ```bash

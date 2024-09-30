@@ -8,7 +8,11 @@ import jwt from 'jsonwebtoken';
 import cors from 'cors';
 
 // importo configuraciones
-import { __dirname, PORT, DOMAIN, JWT_SECRET } from './config.js';
+import { __dirname, PORT, DOMAIN, JWT_SECRET, FULL_DOMAIN } from './config.js';
+import path from "path";
+
+// middleware de multer
+import { upload } from "./middlewares/multer.js";
 
 import { debug } from './tools/utils.js';
 import { authenticateToken } from './middlewares/auth.js';
@@ -16,6 +20,16 @@ import { authenticateToken } from './middlewares/auth.js';
 const app = express();
 
 // Middlewares
+
+
+// servimos archivos estáticos
+// app.use('/', express.static('public'));
+// app.use('/uploads', express.static('public/uploads'));
+// Versión con full path (mas seguro pero mas complejo)
+app.use(express.static(path.join(__dirname, "public")));
+
+
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // true para parsear arrays y objetos complejos
@@ -33,6 +47,31 @@ const MockUser = {
 //                      Rutas
 // ----------------------------------------------
 
+// Upload de archivos con multer
+app.post('/api/v1/upload', upload.single('profile'), (req, res, next) => {
+    debug.blue("Subiendo Archivo con name 'profile'");
+    try {
+
+        console.log("file es ", req.file); // req.file info del archivo
+        console.log("body es:", req.body); // otros campos si existieran
+        debug.magenta("Titulo del form es ", req.body.titulo);
+
+
+        res.status(200).json({
+            msg: "Archivo subido correctamente",
+            file: req.file,
+            body: req.body,
+            peso: `${Math.round(req.file.size / 1024)} Kbytes`,
+            url: `${FULL_DOMAIN}/uploads/${req.file.filename}`
+        });
+
+
+    } catch (e) {
+        debug.red(e);
+        next(e);
+    }
+
+});
 
 // POST Login de Usuarios
 app.post('/api/v1/login', async (req, res) => {
@@ -131,6 +170,21 @@ app.get('/api/v1/admin', authenticateToken, (req, res) => {
 app.get('/api/v1/users', authenticateToken, async (req, res) => {
     res.status(200).json({ data: users, message: 'Lista de usuarios' });
 });
+
+
+// Middleware para manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    const responseAPI = {
+        status: "error",
+        msg: "Error en la API",
+        error: err.message,
+        code: 500
+    }
+
+    res.status(500).send(responseAPI)
+})
 
 app.listen(PORT, () => {
     debug.bright(`Server is running on ${DOMAIN}:${PORT}`);
