@@ -15,7 +15,8 @@ export const authenticateToken = (req, res, next) => {
 
     const authHeader = req.headers['authorization'];
     debug.magenta(authHeader);
-    // Bearer "mi-token-jwt-provenieniente-del-front"
+    // 'Bearer mi-token-jwt-provenieniente-del-front'
+
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) return res.sendStatus(401); // Unauthorized

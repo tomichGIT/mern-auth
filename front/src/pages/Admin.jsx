@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
+
+  // datos que envìo
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     file: null
   });
+
+  // imagen que me devolvio
   const [profileImage, setProfileImage] = useState(null);
 
     useEffect(() => { 
